@@ -6,7 +6,6 @@
 class Sequence
 {
 public:
-    int id;
     int repeat;
     int stepCount;
 
@@ -15,17 +14,19 @@ public:
     // int steps[4][1][4];
 };
 
+Sequence sequences[MAX_SEQ];
+
 
 // TODO Should it be add or simply edit since seq number should be fixed!
-// ./sendosc 127.0.0.1 57123 /seq_add i 1 i 2 i 16
-int seq_add_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
+// ./sendosc 127.0.0.1 57123 /seq i 1 i 2 i 16
+int seq_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
-    Sequence seq;
-    seq.id = argv[0]->i;
+    int id = argv[0]->i;
+    Sequence& seq = sequences[id];
     seq.repeat = argv[1]->i;
     seq.stepCount = argv[2]->i;
 
-    log("/seq_add id:%i, repeat:%i, stepCount:%i\n", seq.id, seq.repeat, seq.stepCount);
+    log("/seq id:%i, repeat:%i, stepCount:%i\n", id, seq.repeat, seq.stepCount);
 
     return 0;
 }

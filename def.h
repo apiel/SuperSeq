@@ -8,6 +8,12 @@
 #endif
 #include "lo/lo.h"
 
+#ifndef log
 #define log printf
+#endif
+
+#ifndef MAX_SEQ
+#define MAX_SEQ 512
+#endif
 
 #endif

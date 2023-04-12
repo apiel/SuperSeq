@@ -30,7 +30,7 @@ int main()
 
     printf("SuperSeq listening on port %s\n", port);
 
-    lo_server_thread_add_method(st, "/seq_add", "iii", seq_add_handler, NULL);
+    lo_server_thread_add_method(st, "/seq", "iii", seq_handler, NULL);
     lo_server_thread_add_method(st, "/quit", "", quit_handler, NULL);
 
     lo_server_thread_start(st);
