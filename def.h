@@ -8,8 +8,16 @@
 #endif
 #include "lo/lo.h"
 
+#ifndef DEBUG
+#define DEBUG 1
+#endif
+
 #ifndef log
 #define log printf
+#endif
+
+#ifndef logError
+#define logError printf
 #endif
 
 #ifndef MAX_SEQ
