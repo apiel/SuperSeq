@@ -24,12 +24,12 @@
 #define MAX_SEQ 512
 #endif
 
-#ifndef MAX_PATCH
-#define MAX_PATCH 512
+#ifndef MAX_MSG
+#define MAX_MSG 512
 #endif
 
-#ifndef PATCH_NAME_LEN
-#define PATCH_NAME_LEN 32
+#ifndef CMD_LEN
+#define CMD_LEN 32
 #endif
 
 #endif

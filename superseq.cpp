@@ -33,6 +33,8 @@ int main()
 
     lo_server_thread_add_method(st, "/seq", "iii", seq_handler, NULL);
     lo_server_thread_add_method(st, "/msg", NULL, msg_handler, NULL);
+    lo_server_thread_add_method(st, "/msg_get", "i", msg_get_handler, NULL);
+    lo_server_thread_add_method(st, "/msg_arg", NULL, msg_arg_handler, NULL);
     lo_server_thread_add_method(st, "/quit", "", quit_handler, NULL);
 
     lo_server_thread_start(st);
