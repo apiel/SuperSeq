@@ -25,6 +25,8 @@ class Message
 public:
     char *cmd;
     lo_msg msg;
+    char *typesOrigin;
+    void *dataOrigin;
 };
 // If we want to store the string, we need to keep track of the length???
 Message messages[MAX_MSG];
@@ -55,8 +57,19 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
     {
         int id = argv[0]->i;
         Message &m = messages[id];
-        lo_message_free(m.msg);
+
+        if (m.msg)
+        {
+            // Reassign pointer address to be able to free them
+            m.msg->types = m.typesOrigin;
+            m.msg->data = m.dataOrigin;
+            lo_message_free(m.msg);
+        }
+
         m.msg = (lo_msg)lo_message_clone(data);
+        // Keep track of address to be able to free them later
+        m.typesOrigin = m.msg->types;
+        m.dataOrigin = m.msg->data;
 
         // remove first 2 types
         m.msg->types += 2;
