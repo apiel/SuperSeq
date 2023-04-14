@@ -23,11 +23,30 @@ typedef struct _lo_message
 class Message
 {
 public:
-    char * cmd;
+    char *cmd;
     lo_msg msg;
 };
 // If we want to store the string, we need to keep track of the length???
 Message messages[MAX_MSG];
+
+void assignArgv(lo_msg msg)
+{
+    int argc = (int)msg->typelen - 1;
+    if (argc)
+    {
+        msg->argv = (lo_arg **)calloc(argc, sizeof(lo_arg *));
+        if (NULL == msg->argv)
+        {
+            return;
+        }
+    }
+    lo_arg *argv = (lo_arg *)msg->data;
+    for (int i = 0; i < argc; i++)
+    {
+        msg->argv[i] = argv;
+        argv = (lo_arg *)((char *)argv + lo_arg_size((lo_type)msg->types[i + 1], argv));
+    }
+}
 
 // ./sendosc 127.0.0.1 57123 /msg i 1 s /synth s hello i 123 f 0.2
 int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
@@ -36,6 +55,7 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
     {
         int id = argv[0]->i;
         Message &m = messages[id];
+        lo_message_free(m.msg);
         m.msg = (lo_msg)lo_message_clone(data);
 
         // remove first 2 types
@@ -49,6 +69,8 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
         int len2 = lo_arg_size(LO_STRING, m.msg->data);
         m.msg->data = (char *)m.msg->data + len2;
         m.msg->datalen -= (len + len2);
+
+        assignArgv(m.msg);
 
 #if DEBUG
         log("Save message[%i]", id);
@@ -73,6 +95,17 @@ int msg_get_handler(const char *path, const char *types, lo_arg **argv, int argc
 
     // should send to client
     // lo_send(t, "/s_new", "si", "psykick", 2000);??
+
+    lo_address targetAddress = lo_message_get_source(data);
+    lo_server server = (lo_server)user_data;
+
+    if (!targetAddress)
+    {
+        return 0;
+    }
+
+    int r = lo_send_message_from(targetAddress, server, path, data);
+
     return 0;
 }
 

@@ -27,17 +27,19 @@ int quit_handler(const char *path, const char *types, lo_arg ** argv,
 
 int main()
 {
-    lo_server_thread st = lo_server_thread_new(port, error);
+    lo_server_thread serverThread = lo_server_thread_new(port, error);
 
     printf("SuperSeq listening on port %s\n", port);
 
-    lo_server_thread_add_method(st, "/seq", "iii", seq_handler, NULL);
-    lo_server_thread_add_method(st, "/msg", NULL, msg_handler, NULL);
-    lo_server_thread_add_method(st, "/msg_get", "i", msg_get_handler, NULL);
-    lo_server_thread_add_method(st, "/msg_arg", NULL, msg_arg_handler, NULL);
-    lo_server_thread_add_method(st, "/quit", "", quit_handler, NULL);
+    lo_server server = lo_server_thread_get_server(serverThread);
 
-    lo_server_thread_start(st);
+    lo_server_thread_add_method(serverThread, "/seq", "iii", seq_handler, NULL);
+    lo_server_thread_add_method(serverThread, "/msg", NULL, msg_handler, NULL);
+    lo_server_thread_add_method(serverThread, "/msg_get", "i", msg_get_handler, server);
+    lo_server_thread_add_method(serverThread, "/msg_arg", NULL, msg_arg_handler, NULL);
+    lo_server_thread_add_method(serverThread, "/quit", "", quit_handler, NULL);
+
+    lo_server_thread_start(serverThread);
 
     while (!done) {
 #ifdef WIN32
@@ -47,7 +49,7 @@ int main()
 #endif
     }
 
-    lo_server_thread_free(st);
+    lo_server_thread_free(serverThread);
 
     return 0;
 }
