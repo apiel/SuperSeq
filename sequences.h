@@ -3,6 +3,19 @@
 
 #include "def.h"
 
+class Step
+{
+public:
+    uint8_t note;
+    uint8_t velocity;
+    int duration; // ms or ticks? but duration need to be passed to the synth or?
+    uint8_t condition;
+    uint16_t msgId;
+    // uint16_t endMsgId; // should there be a end message when duration reached? : NOPE
+    // but there could be a glolbal parameter to set a message for end duration, however
+    // this would mean that have to keep track of nodeId...
+};
+
 class Sequence
 {
 public:
@@ -17,7 +30,6 @@ public:
 Sequence sequences[MAX_SEQ];
 
 
-// TODO Should it be add or simply edit since seq number should be fixed!
 // ./sendosc 127.0.0.1 57123 /seq i 1 i 2 i 16
 int seq_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
