@@ -28,8 +28,4 @@
 #define MAX_MSG 512
 #endif
 
-#ifndef CMD_LEN
-#define CMD_LEN 32
-#endif
-
 #endif

@@ -23,7 +23,7 @@ typedef struct _lo_message
 class Message
 {
 public:
-    char cmd[CMD_LEN];
+    char * cmd;
     lo_msg msg;
 };
 // If we want to store the string, we need to keep track of the length???
@@ -36,7 +36,6 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
     {
         int id = argv[0]->i;
         Message &m = messages[id];
-        strncpy(m.cmd, &argv[1]->s, CMD_LEN);
         m.msg = (lo_msg)lo_message_clone(data);
 
         // remove first 2 types
@@ -46,6 +45,7 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
         // remove first 2 args
         int len = lo_arg_size(LO_INT32, NULL);
         m.msg->data = (char *)m.msg->data + len;
+        m.cmd = (char *)m.msg->data;
         int len2 = lo_arg_size(LO_STRING, m.msg->data);
         m.msg->data = (char *)m.msg->data + len2;
         m.msg->datalen -= (len + len2);
