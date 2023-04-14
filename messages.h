@@ -15,7 +15,6 @@ typedef struct _lo_message
     size_t datasize;
     lo_address source;
     lo_arg **argv;
-    /* timestamp from bundle (LO_TT_IMMEDIATE for unbundled messages) */
     lo_timetag ts;
     int refcount;
 } *lo_msg;
@@ -28,7 +27,6 @@ public:
     char *typesOrigin;
     void *dataOrigin;
 };
-// If we want to store the string, we need to keep track of the length???
 Message messages[MAX_MSG];
 
 void assignArgv(lo_msg msg)
@@ -105,9 +103,6 @@ int msg_get_handler(const char *path, const char *types, lo_arg **argv, int argc
     int id = argv[0]->i;
     log("Message[%i] %s ", id, messages[id].cmd);
     lo_message_pp(messages[id].msg);
-
-    // should send to client
-    // lo_send(t, "/s_new", "si", "psykick", 2000);??
 
     lo_address targetAddress = lo_message_get_source(data);
     lo_server server = (lo_server)user_data;
