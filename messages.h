@@ -122,7 +122,7 @@ int msg_get_handler(const char *path, const char *types, lo_arg **argv, int argc
     return 0;
 }
 
-// ./sendosc 127.0.0.1 57123 /msg_arg i 1 i 4 f 0.4
+// ./sendosc 127.0.0.1 57123 /msg_arg i 1 i 2 f 0.4
 int msg_arg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     if (types[0] == LO_INT32 && types[1] == LO_INT32)
@@ -130,16 +130,26 @@ int msg_arg_handler(const char *path, const char *types, lo_arg **argv, int argc
         int id = argv[0]->i;
         int arg = argv[1]->i;
 
-        // messages[id]->argv[arg] = argv[2];
+        Message &m = messages[id];
+        if (!m.msg)
+        {
+            logError("Message[%i] not found\n", id);
+            return -1;
+        }
 
-        // memcpy(messages[id]->argv[arg], argv[2], sizeof(lo_arg));
+        if (types[2] != m.msg->types[arg + 1])
+        {
+            logError("Invalid type for arg %i. Expected %c, got %c\n", arg, types[2], m.msg->types[arg + 1]);
+            return -1;
+        }
 
-        // printf("argv[%i] = %f\n", arg, messages[id]->argv[arg]->f);
-        // lo_arg_pp((lo_type)messages[id]->types[arg], messages[id]->argv[arg]);
+        memcpy(m.msg->argv[arg], argv[2], lo_arg_size((lo_type)types[2], NULL));
 
-        // lo_arg_pp(LO_FLOAT, messages[id]);
-
-        // need to find the position of the args using types sizes...
+#if DEBUG
+        log("Arg value: ");
+        lo_arg_pp((lo_type)types[2], m.msg->argv[arg]);
+        log("\n");
+#endif
     }
     return -1;
 }
