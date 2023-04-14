@@ -51,6 +51,8 @@ void assignArgv(lo_msg msg)
 // ./sendosc 127.0.0.1 57123 /msg i 1 s /synth s hello i 123 f 0.2
 int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
+    // TODO Should there be another parameter to specify if and how freq/duration/velocity is added to the message?
+    
     if (types[0] == LO_INT32 && types[1] == LO_STRING && (&argv[1]->s)[0] == '/')
     {
         int id = argv[0]->i;

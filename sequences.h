@@ -11,6 +11,7 @@ public:
     int duration; // ms or ticks? but duration need to be passed to the synth or?
     uint8_t condition;
     uint16_t msgId;
+    
     // uint16_t endMsgId; // should there be a end message when duration reached? : NOPE
     // but there could be a glolbal parameter to set a message for end duration, however
     // this would mean that have to keep track of nodeId...
