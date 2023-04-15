@@ -28,4 +28,8 @@
 #define MAX_MSG 512
 #endif
 
+#ifndef MAX_STEP_CONFIG
+#define MAX_STEP_CONFIG 10
+#endif
+
 #endif

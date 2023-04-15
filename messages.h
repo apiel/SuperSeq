@@ -4,6 +4,7 @@
 #include "string.h"
 
 #include "def.h"
+#include "config.h"
 
 typedef struct _lo_message
 {
@@ -23,6 +24,7 @@ class Message
 {
 public:
     char *cmd;
+    int8_t config;
     lo_msg msg;
     char *typesOrigin;
     void *dataOrigin;
@@ -48,12 +50,12 @@ void assignArgv(lo_msg msg)
     }
 }
 
-// ./sendosc 127.0.0.1 57123 /msg i 1 s /synth s hello i 123 f 0.2
+// ./sendosc 127.0.0.1 57123 /msg i 1 i 0 s /synth s hello i 123 f 0.2
 int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     // TODO Should there be another parameter to specify if and how freq/duration/velocity is added to the message?
     
-    if (types[0] == LO_INT32 && types[1] == LO_STRING && (&argv[1]->s)[0] == '/')
+    if (types[0] == LO_INT32 && types[1] == LO_INT32 && types[2] == LO_STRING && (&argv[2]->s)[0] == '/')
     {
         int id = argv[0]->i;
         Message &m = messages[id];
@@ -66,22 +68,27 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
             lo_message_free(m.msg);
         }
 
+        m.config = argv[1]->i;
+
         m.msg = (lo_msg)lo_message_clone(data);
         // Keep track of address to be able to free them later
         m.typesOrigin = m.msg->types;
         m.dataOrigin = m.msg->data;
 
-        // remove first 2 types
-        m.msg->types += 2;
-        m.msg->typelen -= 2;
+        // remove first 3 types
+        m.msg->types += 3;
+        m.msg->typelen -= 3;
         m.msg->types[0] = ',';
-        // remove first 2 args
-        int len = lo_arg_size(LO_INT32, NULL);
-        m.msg->data = (char *)m.msg->data + len;
-        m.cmd = (char *)m.msg->data;
-        int len2 = lo_arg_size(LO_STRING, m.msg->data);
-        m.msg->data = (char *)m.msg->data + len2;
-        m.msg->datalen -= (len + len2);
+
+        // remove first 3 args
+        int len = lo_arg_size(LO_INT32, NULL) * 2; // memory size of id and config
+        m.msg->data = (char *)m.msg->data + len; // skip id and config
+        m.cmd = (char *)m.msg->data; // save cmd
+
+        int len2 = lo_arg_size(LO_STRING, m.msg->data); // memory size of cmd
+        m.msg->data = (char *)m.msg->data + len2; // skip cmd
+
+        m.msg->datalen -= (len + len2); // update data length
 
         assignArgv(m.msg);
 

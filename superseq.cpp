@@ -1,11 +1,7 @@
 #include "def.h"
+#include "config.h"
 #include "messages.h"
 #include "sequences.h"
-
-// config file https://www.walletfox.com/course/parseconfigfile.php#
-// or https://github.com/brofield/simpleini
-// or maybe just use env var...
-const char *port = "57123";
 
 int done = 0;
 
