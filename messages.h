@@ -58,6 +58,12 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
     if (types[0] == LO_INT32 && types[1] == LO_INT32 && types[2] == LO_STRING && (&argv[2]->s)[0] == '/')
     {
         int id = argv[0]->i;
+
+        if (!isValidMsgId(id))
+        {
+            return -1;
+        }
+
         Message &m = messages[id];
 
         if (m.msg)
@@ -68,7 +74,7 @@ int msg_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
             lo_message_free(m.msg);
         }
 
-        m.config = argv[1]->i;
+        m.config = argv[1]->i % MAX_MSG_CONFIG;
 
         m.msg = (lo_msg)lo_message_clone(data);
         // Keep track of address to be able to free them later

@@ -9,7 +9,7 @@
 
 const char *port = "57123";
 
-class StepConfig
+class MsgConfig
 {
 public:
     int8_t noteTarget;
@@ -17,14 +17,14 @@ public:
     int8_t velocityTarget;
     int8_t durationTarget;
 
-    StepConfig(int8_t noteTarget, int8_t freqTarget, int8_t velocityTarget, int8_t durationTarget)
+    MsgConfig(int8_t noteTarget, int8_t freqTarget, int8_t velocityTarget, int8_t durationTarget)
         : noteTarget(noteTarget),
           freqTarget(freqTarget),
           velocityTarget(velocityTarget),
           durationTarget(durationTarget) {}
 };
 
-StepConfig stepConfigs[MAX_STEP_CONFIG] = {
+MsgConfig msgConfigs[MAX_MSG_CONFIG] = {
     {-1, 2, 4, 6},
     {-1, -1, -1, -1},
     {-1, -1, -1, -1},

@@ -30,6 +30,7 @@ int main()
     lo_server server = lo_server_thread_get_server(serverThread);
 
     lo_server_thread_add_method(serverThread, "/seq", "iii", seq_handler, NULL);
+    lo_server_thread_add_method(serverThread, "/step", "iiiiiii", step_handler, NULL);
     lo_server_thread_add_method(serverThread, "/msg", NULL, msg_handler, NULL);
     lo_server_thread_add_method(serverThread, "/msg_get", "i", msg_get_handler, server);
     lo_server_thread_add_method(serverThread, "/msg_arg", NULL, msg_arg_handler, NULL);
