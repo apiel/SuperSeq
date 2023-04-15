@@ -1,0 +1,55 @@
+#ifndef _STATE_H_
+#define _STATE_H_
+
+#include "def.h"
+
+class Step
+{
+public:
+    uint8_t note;
+    uint8_t velocity;
+    int duration; // ms or ticks? but duration need to be passed to the synth or?
+    uint8_t condition;
+    uint16_t msgId;
+
+    // uint16_t endMsgId; // should there be a end message when duration reached? : NOPE
+    // but there could be a glolbal parameter to set a message for end duration, however
+    // this would mean that have to keep track of nodeId...
+};
+
+class Sequence
+{
+public:
+    int repeat;
+    int stepCount;
+    Step steps[MAX_STEP];
+};
+
+Sequence sequences[MAX_SEQ];
+
+typedef struct _lo_message
+{
+    char *types;
+    size_t typelen;
+    size_t typesize;
+    void *data;
+    size_t datalen;
+    size_t datasize;
+    lo_address source;
+    lo_arg **argv;
+    lo_timetag ts;
+    int refcount;
+} *lo_msg;
+
+class Message
+{
+public:
+    char *cmd;
+    int8_t config;
+    lo_msg msg;
+    char *typesOrigin;
+    void *dataOrigin;
+};
+Message messages[MAX_MSG];
+
+#endif

@@ -1,7 +1,8 @@
 #include "def.h"
 #include "config.h"
-#include "messages.h"
-#include "sequences.h"
+#include "msg.h"
+#include "seq.h"
+#include "step.h"
 
 int done = 0;
 

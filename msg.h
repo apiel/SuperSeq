@@ -1,35 +1,11 @@
-#ifndef _MESSAGES_H_
-#define _MESSAGES_H_
+#ifndef _MES_H_
+#define _MES_H_
 
 #include "string.h"
 
 #include "def.h"
 #include "config.h"
-
-typedef struct _lo_message
-{
-    char *types;
-    size_t typelen;
-    size_t typesize;
-    void *data;
-    size_t datalen;
-    size_t datasize;
-    lo_address source;
-    lo_arg **argv;
-    lo_timetag ts;
-    int refcount;
-} *lo_msg;
-
-class Message
-{
-public:
-    char *cmd;
-    int8_t config;
-    lo_msg msg;
-    char *typesOrigin;
-    void *dataOrigin;
-};
-Message messages[MAX_MSG];
+#include "state.h"
 
 void assignArgv(lo_msg msg)
 {
