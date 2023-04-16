@@ -8,13 +8,9 @@ class Step
 public:
     uint8_t note;
     uint8_t velocity;
-    int duration; // ms or ticks? but duration need to be passed to the synth or?
+    int duration; // ms
     uint8_t condition;
     uint16_t msgId;
-
-    // uint16_t endMsgId; // should there be a end message when duration reached? : NOPE
-    // but there could be a glolbal parameter to set a message for end duration, however
-    // this would mean that have to keep track of nodeId...
 };
 
 class Sequence
@@ -51,5 +47,8 @@ public:
     void *dataOrigin;
 };
 Message messages[MAX_MSG];
+
+// counter goes from 0 to 65535 (0xFFFF)
+uint16_t counter = 0;
 
 #endif

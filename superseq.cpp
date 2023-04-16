@@ -3,6 +3,7 @@
 #include "msg.h"
 #include "seq.h"
 #include "step.h"
+#include "loop.h"
 
 int done = 0;
 
@@ -16,9 +17,7 @@ int quit_handler(const char *path, const char *types, lo_arg ** argv,
                  int argc, lo_message data, void *user_data)
 {
     done = 1;
-    printf("quiting\n\n");
-    fflush(stdout);
-
+    printf("quiting\n");
     return 0;
 }
 
@@ -40,11 +39,7 @@ int main()
     lo_server_thread_start(serverThread);
 
     while (!done) {
-#ifdef WIN32
-        Sleep(1);
-#else
-        usleep(1000);
-#endif
+        loop();
     }
 
     lo_server_thread_free(serverThread);

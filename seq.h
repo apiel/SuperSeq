@@ -25,4 +25,8 @@ int seq_handler(const char *path, const char *types, lo_arg **argv, int argc, lo
     return 0;
 }
 
+// Handler to start at counter X
+
+// Handler to start sequence, in the same as sequence Y after X repeatitions
+
 #endif
