@@ -27,11 +27,13 @@ void loop()
     if (elapsed_seconds.count() >= quaterBeatSec)
     {
         last = now;
+        beatCounter++;
         // printf("elapsed time: %.1f ms\n", elapsed_seconds.count() * 1000);
         if (targetAddress)
         {
-            beatCounter++;
             lo_send(targetAddress, "/beat", "i", beatCounter);
+
+            // should notify when sequence start and stop
         }
     }
 }
