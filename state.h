@@ -49,6 +49,6 @@ public:
 Message messages[MAX_MSG];
 
 // counter goes from 0 to 65535 (0xFFFF)
-uint16_t counter = 0;
+uint16_t beatCounter = 0;
 
 #endif

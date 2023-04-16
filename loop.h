@@ -19,7 +19,7 @@ float getQuaterBeatSec()
 
 float quaterBeatSec = getQuaterBeatSec();
 
-void loop(lo_server server)
+void loop()
 {
     auto now = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = now - last;
@@ -30,11 +30,8 @@ void loop(lo_server server)
         // printf("elapsed time: %.1f ms\n", elapsed_seconds.count() * 1000);
         if (targetAddress)
         {
-            lo_message msg = lo_message_new();
-            lo_message_add_int32(msg, counter);
-            lo_send_message_from(targetAddress, server, "/beat", msg);
-            // lo_send(targetAddress, "/beat", "i", counter);
-            // lo_send(targetAddress, "/beat", "");
+            beatCounter++;
+            lo_send(targetAddress, "/beat", "i", beatCounter);
         }
     }
 }
@@ -43,9 +40,6 @@ void loop(lo_server server)
 int sub_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
     lo_address target = lo_message_get_source(data);
-
-    // lo_address_copy(targetAddress, lo_message_get_source(data));
-
     if (targetAddress)
     {
         lo_address_free(targetAddress);

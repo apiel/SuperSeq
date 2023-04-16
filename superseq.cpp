@@ -40,7 +40,7 @@ int main()
     lo_server_thread_start(serverThread);
 
     while (!done) {
-        loop(server);
+        loop();
     }
 
     lo_server_thread_free(serverThread);
