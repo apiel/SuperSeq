@@ -34,12 +34,13 @@ int main()
     lo_server_thread_add_method(serverThread, "/msg", NULL, msg_handler, NULL);
     lo_server_thread_add_method(serverThread, "/msg_get", "i", msg_get_handler, server);
     lo_server_thread_add_method(serverThread, "/msg_arg", NULL, msg_arg_handler, NULL);
+    lo_server_thread_add_method(serverThread, "/sub", NULL, sub_handler, NULL);
     lo_server_thread_add_method(serverThread, "/quit", "", quit_handler, NULL);
 
     lo_server_thread_start(serverThread);
 
     while (!done) {
-        loop();
+        loop(server);
     }
 
     lo_server_thread_free(serverThread);

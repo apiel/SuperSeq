@@ -103,7 +103,7 @@ int msg_get_handler(const char *path, const char *types, lo_arg **argv, int argc
         return 0;
     }
 
-    int r = lo_send_message_from(targetAddress, server, path, data);
+    lo_send_message_from(targetAddress, server, path, data);
 
     return 0;
 }
