@@ -27,11 +27,12 @@ void loop(lo_server server)
     if (elapsed_seconds.count() >= quaterBeatSec)
     {
         last = now;
-        printf("elapsed time: %.1f ms\n", elapsed_seconds.count() * 1000);
+        // printf("elapsed time: %.1f ms\n", elapsed_seconds.count() * 1000);
         if (targetAddress)
         {
             // lo_send_message_from(targetAddress, server, "/beat", data);
-            lo_send(targetAddress, "/beat", "i", counter);
+            // lo_send(targetAddress, "/beat", "i", counter);
+            lo_send(targetAddress, "/beat", "");
         }
     }
 }
