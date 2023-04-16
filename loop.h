@@ -30,9 +30,11 @@ void loop(lo_server server)
         // printf("elapsed time: %.1f ms\n", elapsed_seconds.count() * 1000);
         if (targetAddress)
         {
-            // lo_send_message_from(targetAddress, server, "/beat", data);
+            lo_message msg = lo_message_new();
+            lo_message_add_int32(msg, counter);
+            lo_send_message_from(targetAddress, server, "/beat", msg);
             // lo_send(targetAddress, "/beat", "i", counter);
-            lo_send(targetAddress, "/beat", "");
+            // lo_send(targetAddress, "/beat", "");
         }
     }
 }
@@ -40,7 +42,16 @@ void loop(lo_server server)
 // ./sendosc 127.0.0.1 57123 /sub
 int sub_handler(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data)
 {
-    targetAddress = lo_message_get_source(data);
+    lo_address target = lo_message_get_source(data);
+
+    // lo_address_copy(targetAddress, lo_message_get_source(data));
+
+    if (targetAddress)
+    {
+        lo_address_free(targetAddress);
+    }
+    targetAddress = lo_address_new(lo_address_get_hostname(target), lo_address_get_port(target));
+
 
 #if DEBUG
     log("Subscribe to /beat\n");
